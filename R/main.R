@@ -202,7 +202,7 @@ create_query_url <- function(key, filter = NULL) {
 
   # Get flow reference (= dataset abbreviation, e.g. ICP or BOP)
   flow_ref <- regmatches(key, regexpr("^[[:alnum:]_]+", key))
-  key_q <- regmatches(key, regexpr("^[[:alnum:]_]+", key),
+  key_q <- regmatches(key, regexpr("^[[:alnum:]_]+\\.", key),
                       invert = TRUE)[[1]][2]
 
   if(any(names(filter) == "")) {
