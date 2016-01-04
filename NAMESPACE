@@ -3,5 +3,4 @@
 export(convert_dates)
 export(get_data)
 export(get_dataflows)
-export(get_description)
 export(get_dimensions)

@@ -2,21 +2,21 @@
 % Please edit documentation in R/main.R
 \name{get_dimensions}
 \alias{get_dimensions}
-\title{Retrieve dimensions of series in the ECB's SDW}
+\title{Retrieve dimensions of Eurostat series}
 \usage{
-get_dimensions(key)
+get_dimensions(id)
 }
 \arguments{
-\item{key}{A character string identifying the series to be retrieved}
+\item{id}{A character string identifying the series to be retrieved}
 }
 \value{
 A list of data frames, one for each series retrieved
 }
 \description{
-Retrieve dimensions of series in the ECB's SDW
+Retrieve dimensions of Eurostat series
 }
 \examples{
-hicp_dims <- get_dimensions("ICP.M.U2.N.000000.4.ANR")
-hicp_dims[[1]]
+dims <- get_dimensions("cdh_e_occ1")
+str(dims)
 }
 

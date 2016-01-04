@@ -2,7 +2,7 @@
 % Please edit documentation in R/main.R
 \name{convert_dates}
 \alias{convert_dates}
-\title{Format date variable retrieved from the SDW into a proper date variable}
+\title{Format date variable into a proper date variable}
 \usage{
 convert_dates(x)
 }
@@ -13,11 +13,6 @@ convert_dates(x)
 A date-formatted vector
 }
 \description{
-Format date variable retrieved from the SDW into a proper date variable
-}
-\examples{
-hicp <- get_data("ICP.M.U2.N.000000.4.ANR")
-hicp$obstime <- convert_dates(hicp$obstime)
-str(hicp)
+Format date variable into a proper date variable
 }
 

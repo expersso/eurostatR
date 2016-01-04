@@ -2,18 +2,22 @@
 % Please edit documentation in R/main.R
 \name{get_dataflows}
 \alias{get_dataflows}
-\title{Retrieve data frame of all datasets in the ECB Statistical Data Warehouse}
+\title{Retrieve a data frame of all Eurostat data sets}
 \usage{
-get_dataflows()
+get_dataflows(lang = "en")
+}
+\arguments{
+\item{lang}{The language for variable descriptions ('en', 'de', or 'fr')}
 }
 \value{
 A dataframe
 }
 \description{
-Retrieve data frame of all datasets in the ECB Statistical Data Warehouse
+Retrieve a data frame of all Eurostat data sets
 }
 \examples{
 df <- get_dataflows()
 head(df)
+df[grep("doctorate", df$description),]
 }
 

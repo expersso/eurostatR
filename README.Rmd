@@ -1,0 +1,97 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+```{r options, echo=FALSE}
+knitr::opts_chunk$set(fig.path = "", message = FALSE, warning = FALSE)
+```
+
+### Introduction
+
+The `eurostatR` package package provides an `R` interface to the [Eurostat API](https://ec.europa.eu/eurostat).
+
+To install the development version:
+
+```{r install, eval=FALSE}
+library(devtools)
+install_github("expersso/eurostatR")
+```
+
+### Example usage
+
+Start by retrieving a dataframe with all available data sets:
+
+```{r}
+library(eurostatR)
+
+flows <- get_dataflows()
+head(flows)
+```
+
+Now, let's say we're interested in the share of employees with a doctorate,
+broken down by occupation:
+
+```{r}
+flows[grep("doctorate", flows$description),]
+id <- "cdh_e_occ1"
+```
+
+Before getting the data, we need to know the available dimensions for this data
+set:
+
+```{r}
+dims <- get_dimensions(id)
+str(dims)
+```
+
+The last value of the returned list (`dims$key`) gives the general form of the
+key that we need to request. By inspecting the dimensions in the list, we find
+that `FREQ` should be `A` (annual), `Y_GRAD` should be `TOTAL`, and `UNIT`
+should be `PC` (percent). The dimension `ISCO88` gives the different
+occupations, and since we want all of these, we leave that dimension empty.
+Finally we want to look at date for Germany and the US (`DE` and `US`), which we
+specify with a `+`.
+
+```{r}
+key <- "cdh_e_occ1.A.TOTAL.PC..DE+US"
+doctorates <- get_data(key)
+head(doctorates)
+```
+
+We can now plot these data as a parallel coordinates plot:
+
+```{r plot, fig.width = 6, fig.height = 4}
+library(dplyr)
+library(ggplot2)
+
+doctorates <- left_join(doctorates, dims$dimensions$ISCO88, 
+                        by = c("isco88" = "id"))
+
+# Factor order for occupation variable, in descending order
+lvls <- doctorates %>% 
+  filter(geo == "US") %>% 
+  arrange(obsvalue) %>% 
+  .$description
+
+doctorates %>% 
+  filter(obstime == 2006) %>% 
+  filter(!is.na(obsvalue)) %>% 
+  filter(description != "Professionals") %>% 
+  ggplot(aes(x = factor(description, lvls), 
+             y = obsvalue, fill = geo, color = geo, group = geo)) +
+  geom_line() +
+  geom_point() +
+  coord_flip() +
+  theme_light(8) +
+  labs(y = "% share of employees", x = NULL,
+       title = "Employed doctorate holders by occupation")
+```
+
+The chart tells us e.g. that doctorates are much more prevalent among teaching
+professionals in the US than they are in Germany.
+
+### Disclaimer
+
+This package is in no way officially related to, or endorsed by, the Eurostat.
